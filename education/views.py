@@ -1,6 +1,10 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
-from .models import Course, Lesson
-from .serializers import CourseSerializer, LessonSerializer
+from .models import Course, Lesson, Payments
+from .serializers import CourseSerializer, LessonSerializer, PaymentSerializer
+from django_filters import rest_framework as filters
+from .filters import PaymentFilter
+from rest_framework.filters import OrderingFilter
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -18,18 +22,20 @@ class LessonRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LessonSerializer
 
 
+class PaymentFilterView(filters.FilterSet):
+    class Meta:
+        model = Payments
+        fields = {
+            'payment_date': ['exact', 'lte', 'gte'],
+            'course_or_lesson': ['exact'],
+            'payment_method': ['exact'],
+        }
 
 
-# class LessonRetrieveView(generics.RetrieveAPIView):
-#     queryset = Lesson.objects.all()
-#     serializer_class = LessonSerializer
-#
-#
-# class LessonUpdateView(generics.UpdateAPIView):
-#     queryset = Lesson.objects.all()
-#     serializer_class = LessonSerializer
-#
-#
-# class LessonDestroyView(generics.DestroyAPIView):
-#     queryset = Lesson.objects.all()
-#     serializer_class = LessonSerializer
+class PaymentListView(generics.ListCreateAPIView):
+    queryset = Payments.objects.all()
+    serializer_class = PaymentSerializer
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filterset_class = PaymentFilter
+    filterset_fields = ('payment_date__gte', 'payment_date__lte', 'course_or_lesson', 'payment_method')  # Набор полей для фильтрации
+

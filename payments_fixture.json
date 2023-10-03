@@ -1,0 +1,25 @@
+[
+    {
+        "model": "users.user",
+        "pk": 1,
+        "fields": {
+            "username": 1,
+            "email": "fjdf@gmail.com",
+            "phone": "8-916-777-77-77",
+            "city": "Город",
+            "avatar": "Аватар"
+        }
+    },
+   {
+        "model": "education.Payments",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "payment_date": "2023-10-02",
+            "course_or_lesson": "Название курса или урока",
+            "amount": 150.00,
+            "payment_method": "transfer"
+        }
+    }
+
+]
