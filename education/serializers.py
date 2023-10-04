@@ -8,7 +8,11 @@ class LessonAllSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'title',
+            'course',
         )
+        depth = 1
+
+    course = serializers.StringRelatedField(source='course.title')
 
 
 class LessonSerializer(serializers.ModelSerializer):

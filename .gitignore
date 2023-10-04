@@ -2,3 +2,5 @@
 /conf.py
 /notes.txt
 /.env
+.idea
+env/
