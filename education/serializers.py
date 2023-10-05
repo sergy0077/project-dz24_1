@@ -5,25 +5,19 @@ from .models import Course, Lesson, Payments
 class LessonAllSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
-        fields = (
-            'id',
-            'title',
-            'course',
-        )
-        depth = 1
-
-    course = serializers.StringRelatedField(source='course.title')
+        fields = ('id', 'title', 'course')
 
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = ('id', 'title', 'description', 'preview', 'video_link')
+        course = serializers.StringRelatedField()
 
 
 class CourseSerializer(serializers.ModelSerializer):
     num_lessons = serializers.SerializerMethodField()
-    lessons = LessonSerializer(many=True, read_only=True)
+    lessons = LessonSerializer(many=True, read_only=True, source='lesson_set')
 
     class Meta:
         model = Course
