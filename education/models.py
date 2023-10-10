@@ -1,8 +1,11 @@
 from django.db import models
 from config import settings
 from users.models import User
+from django.contrib.auth.models import Group, Permission
+from django.contrib.contenttypes.models import ContentType
 
-################################################################
+
+#########################################################################
 class Course(models.Model):
     title = models.CharField(max_length=200,  verbose_name='развание курса')
     preview = models.ImageField(upload_to='courses/', verbose_name='изображение курса', null=True, blank=True)
@@ -51,3 +54,24 @@ class Payments(models .Model):
     class Meta:
         verbose_name = 'платеж'
         verbose_name_plural = 'платежи'
+
+#################################################################
+
+class EducationModeratorGroup(models.Model):
+    class Meta:
+        verbose_name = "Группа модераторов"
+        verbose_name_plural = "Группы модераторов"
+
+    @classmethod
+    def create_moderator_group(cls):
+        content_type = ContentType.objects.get_for_model(EducationModeratorGroup)
+        permission = Permission.objects.create(
+            codename='can_manage_courses_and_lessons',
+            name='Can manage courses and lessons',
+            content_type=content_type,
+        )
+
+        group = Group.objects.create(name='Moderators')
+        group.permissions.add(permission)
+
+        return group
