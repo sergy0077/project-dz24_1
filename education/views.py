@@ -9,6 +9,12 @@ from django_filters import rest_framework as filters
 from .filters import PaymentFilter
 from rest_framework.filters import OrderingFilter
 
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+from .models import User
+from users.serializers import UserSerializer
+
 
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
@@ -66,47 +72,22 @@ class EducationModeratorGroupView(View):
         return HttpResponse("Hello, Education Moderator Group!")
 
 ####################################################
-# from django.shortcuts import render
-# from rest_framework import generics
-# from rest_framework.permissions import IsAuthenticated
-#
-# from lesson.models import Lesson
-# from lesson.serializers import LessonSerializer
-# from users.permissions import IsNotModerator, IsOwner, IsModerator
-#
-#
-# class LessonCreateAPIView(generics.CreateAPIView):
-#     serializer_class = LessonSerializer
-#     permission_classes = [IsAuthenticated | IsNotModerator]
-#
-#     def perform_create(self, serializer):
-#         lesson = serializer.save()
-#         lesson.owner = self.request.user
-#         lesson.save()
-#
-#
-# class LessonListAPIView(generics.ListAPIView):
-#     serializer_class = LessonSerializer
-#     queryset = Lesson.objects.all()
-#     permission_classes = [IsAuthenticated, IsModerator]
-#
-#
-# class LessonRetrieveAPIView(generics.RetrieveAPIView):
-#     queryset = Lesson.objects.all()
-#     serializer_class = LessonSerializer
-#     permission_classes = [IsOwner]
-#     lookup_field = 'id'
-#
-#
-# class LessonUpdateAPIView(generics.UpdateAPIView):
-#     queryset = Lesson.objects.all()
-#     serializer_class = LessonSerializer
-#     permission_classes = [IsOwner]
-#     lookup_field = 'id'
-#
-#
-# class LessonDestroyAPIView(generics.DestroyAPIView):
-#     queryset = Lesson.objects.all()
-#     permission_classes = [IsOwner | IsNotModerator]
-#     lookup_field = 'id'
+
+
+class RegistrationView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        user = serializer.instance
+        refresh = RefreshToken.for_user(user)  # Генерация токенов
+        data = {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }
+        return Response(data, status=status.HTTP_201_CREATED)
+
 
