@@ -1,4 +1,5 @@
-from rest_framework import generics
+from rest_framework import generics, viewsets, permissions
+from education.permissions import IsOwnerOrModerator
 from .models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth import login as auth_login

@@ -21,6 +21,7 @@ class Course(models.Model):
 ########################################################################
 class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='курс')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='владелец урока')
     title = models.CharField(max_length=200,  verbose_name='Название урока')
     description = models.TextField(verbose_name='описание урока')
     preview = models.ImageField(upload_to='lessons/', verbose_name='изображение урока', null=True, blank=True)
@@ -75,3 +76,20 @@ class EducationModeratorGroup(models.Model):
         group.permissions.add(permission)
 
         return group
+
+############################################################################
+
+
+class Subscription(models.Model):
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, null=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
+    is_active = models.BooleanField(default=True, verbose_name='подписка')
+
+    def __str__(self):
+        return self.is_active
+
+    class Meta:
+        verbose_name = 'подписка'
+        verbose_name_plural = 'подписки'
+
+############################################################################
