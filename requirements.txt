@@ -7,3 +7,6 @@ djangorestframework~=3.14.0
 django-filter~=23.3
 psycopg2-binary==2.9.7
 pytz==2023.3.post1
+
+stripe~=7.0.0
+pytest~=7.4.2

@@ -1,0 +1,32 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Оплата</title>
+  <script src="{% static 'education/payment.js' %}"></script>
+  <meta name="csrf-token" content="{% csrf_token %}">
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+
+<body>
+  <form id="payment-form" method="POST" action="/create_payment_view/">
+    {% csrf_token %}
+    <input type="text" name="amount" id="amount" placeholder="Введите сумму платежа">
+    <!-- Другие поля формы оплаты могут быть добавлены здесь -->
+    <div id="card-element"></div>
+    <button type="submit">Оплатить</button>
+    <div id="error-message"></div>
+  </form>
+
+  <!-- Подключение payment.js -->
+
+  <script type="text/javascript">
+  var stripe = Stripe('{{ STRIPE_PUBLIC_KEY }}');
+
+</body>
+
+</html>
