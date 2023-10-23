@@ -85,9 +85,10 @@ class LessonSerializer(serializers.ModelSerializer):
           404:
             description: Урок не найден
         """
+    course_title = serializers.ReadOnlyField(source='course.title')
     class Meta:
         model = Lesson
-        fields = ('pk', 'title', 'description', 'preview', 'video_link')
+        fields = ('pk', 'title', 'description', 'preview', 'video_link', 'course_title')
         course = serializers.StringRelatedField()
         UrlValidator = [UrlValidator(field='url')]
 

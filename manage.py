@@ -6,6 +6,10 @@ import sys
 
 def main():
     """Run administrative tasks."""
+
+    current_path = os.path.dirname(os.path.abspath(__file__))
+    sys.path.append(os.path.join(current_path, 'education'))
+
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
     try:
         from django.core.management import execute_from_command_line

@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm
 from .serializers import UserSerializer
+from django.utils.timezone import now
 
 
 class UserListView(generics.ListCreateAPIView):
@@ -79,7 +80,6 @@ def login(request):
     return render(request, 'users/login.html', {'form': form})
 
 
-
 @login_required
 def home(request):
     """
@@ -87,5 +87,8 @@ def home(request):
     """
     return render(request, 'users/home.html')
 
+
 def index(request):
     return render(request, 'index.html', {'message': 'Добро пожаловать на наш сайт!'})
+
+

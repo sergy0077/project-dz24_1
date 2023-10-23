@@ -1,5 +1,5 @@
 import stripe
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -19,9 +19,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
 from .serializers import PaginatedCourseSerializer, PaginatedLessonSerializer
-from django.http import JsonResponse
 from .stripe_helpers import create_payment_intent, retrieve_payment_intent
 from django.views.generic import TemplateView
+from education.tasks import send_update_notification_email
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -420,5 +420,22 @@ def lesson_detail(request, course_id, lesson_id):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+def send_update_notification_to_email_subscribers(request):
+    """
+    Асинхронная рассылка писем пользователям об обновлении материалов курса.
+    """
+    # Получите список подписчиков из вашей базы данных
+    recipient_list = ['fjdf@gmail.com', 'kutsenko@mail.ru', 'sergykutsenko6@gmail.com', 'ya-lo-maniya@mail.ru']  # Заполнить список email подписчиков
+
+    # Сообщение, которое вы хотите отправить
+    update_notification = 'Привет, спасибо за подписку. Вышло обновление материалов курса, на который Вы подписаны!'
+
+    # Отправьте письмо каждому подписчику асинхронно
+    for recipient in recipient_list:
+        send_update_notification_email.delay(recipient, update_notification)
+
+    # Возвраn JSON-ответа (можно изменить на что угодно в зависимости от вашей логики)
+    return JsonResponse({'message': 'Письма отправлены подписчикам!'})
 
 ##############################################################################

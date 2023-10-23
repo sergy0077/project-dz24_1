@@ -7,12 +7,12 @@ from django.contrib.contenttypes.models import ContentType
 
 #########################################################################
 class Course(models.Model):
-    title = models.CharField(max_length=200,  verbose_name='развание курса')
+    title = models.CharField(max_length=200,  verbose_name='название курса')
     preview = models.ImageField(upload_to='courses/', verbose_name='изображение курса', null=True, blank=True)
     description = models.TextField(verbose_name='описание курса')
 
     def __str__(self):
-        return self.title
+        return f"Title: {self.title}, Preview: {self.preview}, Description: {self.description}"
 
     class Meta:
         verbose_name = 'курс'
@@ -22,13 +22,13 @@ class Course(models.Model):
 class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='курс')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='владелец урока')
-    title = models.CharField(max_length=200,  verbose_name='Название урока')
+    title = models.CharField(max_length=200,  verbose_name='название урока')
     description = models.TextField(verbose_name='описание урока')
     preview = models.ImageField(upload_to='lessons/', verbose_name='изображение урока', null=True, blank=True)
     video_link = models.URLField( verbose_name='ссылка на видео', null=True, blank=True)
 
     def __str__(self):
-        return self.title
+        return f"Title: {self.title}, Course: {self.course}, Owner: {self.owner}, Description: {self.description}, Preview: {self.preview}, Video_link: {self.video_link}"
 
     class Meta:
         verbose_name = 'урок'
@@ -86,7 +86,10 @@ class Subscription(models.Model):
     is_active = models.BooleanField(default=True, verbose_name='подписка')
 
     def __str__(self):
-        return self.is_active
+        user_email = self.user.email if self.user else 'No User'
+        course_title = self.course.title if self.course else 'No Course'
+        return f"User: {user_email}, Course: {course_title}, Active: {self.is_active}"
+        # return f"User: {self.user.email}, Course: {self.course.title}, Active: {self.is_active}"
 
     class Meta:
         verbose_name = 'подписка'

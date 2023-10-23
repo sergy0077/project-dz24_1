@@ -3,8 +3,9 @@ from .models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 
+
 class UserAdmin(BaseUserAdmin):
-    list_display = ('email', 'username', 'phone', 'city', 'avatar', 'is_staff')
+    list_display = ('email', 'username', 'phone', 'city', 'is_staff')
     search_fields = ('email', 'username')
     filter_horizontal = ()
     ordering = ('email',)

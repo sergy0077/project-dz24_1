@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from education.models import Course, Lesson  # Замените education на имя вашего приложения
 
+
 class Command(BaseCommand):
     help = 'Create a moderator group with specific permissions'
 

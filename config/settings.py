@@ -14,6 +14,8 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+from celery.schedules import crontab
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -37,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_beat',
 
     'rest_framework',
     'rest_framework_simplejwt',
@@ -59,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'users.tasks.SetLastVisitMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -162,6 +166,38 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",  # Разрешенный локальный источник
     "https://example.com",    # Разрешенный источник
 ]
+CORS_ALLOW_ALL_ORIGINS = True
 
 STRIPE_PUBLIC_KEY = 'pk_test_51O32tgHJsK4c6F7oUI99Pq5BD7j4kIvY3xeDtz5gKNWsnl6VVYxLiKfaBsWZ39W5fYBffZufjluyzzvafryYFWBA00bWNJwgh3'
 STRIPE_SECRET_KEY = 'sk_test_51O32tgHJsK4c6F7ofMOFM8hrX74oxpqjAm1zfUUa1MghPDWtLb2v3ANJimndQ8LtCpllOOGgRaZXJlkMEMy8i9V200rDlEyJYw'
+
+# Настройки для Celery
+
+# URL-адрес брокера сообщений
+CELERY_BROKER_URL = 'redis://localhost:6379' # Например, Redis, который по умолчанию работает на порту 6379
+# URL-адрес брокера результатов, также Redis
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+# Часовой пояс для работы Celery
+CELERY_TIMEZONE = "UTC"
+# Флаг отслеживания выполнения задач
+CELERY_TASK_TRACK_STARTED = True
+# Максимальное время на выполнение задачи
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_BEAT_SCHEDULE = {
+    'tasks': {
+        'task': 'education.tasks',  # Путь к вашей асинхронной задаче
+        'schedule': crontab(minute='0', hour='0'),  # Расписание выполнения задачи (здесь ежедневно в полночь)
+    },
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'ваш_smtp_сервер'
+EMAIL_PORT = 587  # Порт вашего SMTP-сервера (обычно 587 для TLS)
+EMAIL_USE_TLS = True  # Использовать TLS (если True) или SSL (если False)
+EMAIL_HOST_USER = 'ваш_email@example.com'  # Ваша электронная почта
+EMAIL_HOST_PASSWORD = 'ваш_пароль'  # Ваш пароль к почтовому ящику
+DEFAULT_FROM_EMAIL = 'ваш_email@example.com'  # Email-адрес отправителя по умолчанию
+

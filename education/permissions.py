@@ -1,5 +1,6 @@
 from rest_framework import permissions
 
+
 class IsOwnerOrModerator(permissions.BasePermission):
     """
     Пользователи могут видеть и редактировать только свои курсы и уроки.

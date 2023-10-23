@@ -11,12 +11,10 @@ class UserRole(models.TextChoices):
 
 class User(AbstractUser):
     username = models.CharField(max_length=150, verbose_name='имя пользователя', null=True)
-    fullname = models.CharField(max_length=150, verbose_name='ФИ0')
     email = models.EmailField(max_length=150, verbose_name='почта', unique=True)
     phone = models.CharField(max_length=35, verbose_name='номер телефона', **NULLABLE)
     city = models.CharField(max_length=150, verbose_name='город')
-    avatar = models.ImageField(upload_to='avatar/', verbose_name='аватарка', null=True, blank=True)
-
+    last_visit = models.DateTimeField(max_length=150, verbose_name='последнее посещение')
     role = models.CharField(max_length=20, choices=UserRole.choices, default=UserRole.MEMBER)
     group = models.ManyToManyField('auth.Group', blank=True, related_name='custom_users_group')
     user_permissions = models.ManyToManyField(Permission, related_name='custom_user_set', blank=True)
@@ -29,4 +27,4 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ["username"]
 
     def __str__(self):
-        return self.email
+        return f"{self.username} ({self.email}), Phone: {self.phone}, City: {self.city}"
