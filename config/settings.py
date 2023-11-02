@@ -43,13 +43,14 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_simplejwt',
+
     'rest_framework.authtoken',
     'drf_yasg',
     'corsheaders',
+    'django_filters',
 
     'users',
     'education',
-    'django_filters',
 
 ]
 
@@ -94,7 +95,7 @@ DATABASES = {
         'NAME': 'project_24_1',
         'USER': 'postgres',
         'PASSWORD': '130468',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '5432',
     }
 }
