@@ -43,7 +43,6 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_simplejwt',
-
     'rest_framework.authtoken',
     'drf_yasg',
     'corsheaders',
@@ -92,9 +91,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'project_24_1',
+        'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': '130468',
+        'PASSWORD': 'postgres',
         'HOST': 'db',
         'PORT': '5432',
     }
@@ -175,9 +174,9 @@ STRIPE_SECRET_KEY = 'sk_test_51O32tgHJsK4c6F7ofMOFM8hrX74oxpqjAm1zfUUa1MghPDWtLb
 # Настройки для Celery
 
 # URL-адрес брокера сообщений
-CELERY_BROKER_URL = 'redis://localhost:6379' # Например, Redis, который по умолчанию работает на порту 6379
+CELERY_BROKER_URL = 'redis://redis:6379'
 # URL-адрес брокера результатов, также Redis
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://redis:6379'
 # Часовой пояс для работы Celery
 CELERY_TIMEZONE = "UTC"
 # Флаг отслеживания выполнения задач
